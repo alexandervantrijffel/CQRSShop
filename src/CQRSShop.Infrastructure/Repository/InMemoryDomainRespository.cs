@@ -67,7 +67,7 @@ namespace CQRSShop.Infrastructure.Repository
             {
                 var events = _eventStore[id];
                 var deserializedEvents = events.Select(e => JsonConvert.DeserializeObject(e, _serializationSettings) as IEvent);
-                return BuildAggregate<TResult>(deserializedEvents);
+				return BuildAggregate<TResult>(deserializedEvents);
             }
             throw new AggregateNotFoundException("Could not found aggregate of type " + typeof(TResult) + " and id " + id);
         }

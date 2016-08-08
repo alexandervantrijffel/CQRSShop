@@ -8,7 +8,7 @@ using Neo4jClient;
 
 namespace CQRSShop.Service
 {
-    internal class IndexingServie
+    internal class IndexingService
     {
         private Indexer _indexer;
         private Dictionary<Type, Action<object>> _eventHandlerMapping;

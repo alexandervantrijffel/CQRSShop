@@ -2,7 +2,6 @@
 using CQRSShop.Domain.Aggregates;
 using CQRSShop.Domain.Exceptions;
 using CQRSShop.Infrastructure;
-using CQRSShop.Infrastructure.Exceptions;
 using CQRSShop.Infrastructure.Repository;
 
 namespace CQRSShop.Domain.CommandHandlers

@@ -15,7 +15,12 @@ namespace CQRSShop.Infrastructure
             var expectedVersion = aggregate.Version - events.Count;
             return expectedVersion;
         }
-		
+		protected void BuildAggregate<TResult>(TResult aggregate, IEnumerable<IEvent> events) where TResult : IAggregate, new()
+		{
+			foreach (var @event in events)
+				aggregate.ApplyEvent(@event);
+		}
+
 		protected TResult BuildAggregate<TResult>(IEnumerable<IEvent> events) where TResult : IAggregate, new()
         {
             var result = new TResult();

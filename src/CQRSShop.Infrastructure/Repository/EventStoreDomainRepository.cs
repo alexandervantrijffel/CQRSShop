@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CQRSShop.Infrastructure.Exceptions;
 using EventStore.ClientAPI;
 
@@ -39,24 +40,38 @@ namespace CQRSShop.Infrastructure.Repository
 
         public override TResult GetById<TResult>(Guid id)
         {
-            var streamName = AggregateToStreamName(typeof(TResult), id);
-			// todo paging
-            var eventsSlice = _connection.ReadStreamEventsForwardAsync(streamName, 0, 4096, false).Result;
-            if (eventsSlice.Status == SliceReadStatus.StreamNotFound)
-            {
-                throw new AggregateNotFoundException("Could not found aggregate of type " + typeof(TResult) + " and id " + id);
-            }
-            var deserializedEvents = eventsSlice.Events.Select(e =>
-            {
-	            var metadata =
-		            e.OriginalEvent.Metadata.ToObject<Dictionary<string, string>>(
-			            typeof(Dictionary<string, string>).AssemblyQualifiedName);
-	            return e.OriginalEvent.Data.ToObject<IEvent>(metadata[EventClrTypeHeader]);
-            });
-            return BuildAggregate<TResult>(deserializedEvents);
+	        var lastEventNumber = GetLastEventNumber<TResult>(id);
+	        if (lastEventNumber == null)
+	        {
+				throw new AggregateNotFoundException($"Could not found aggregate of type {typeof(TResult)} and id {id}");
+			}
+			return GetFromStreamAsync<TResult>(id, lastEventNumber).Result;
         }
 
-        public EventData CreateEventData(object @event)
+	    private async Task<TResult> GetFromStreamAsync<TResult>(Guid id, int? lastEventNumber) where TResult:IAggregate,new()
+	    {
+			var streamName = AggregateToStreamName(typeof(TResult), id);
+			var aggregate = new TResult();
+			var pageSize = 4096; // maximum page size that is supported by GetEventStore
+			var startEvent = 0;
+
+			do
+		    {
+			    var events = await _connection.ReadStreamEventsForwardAsync(streamName, startEvent, pageSize, false);
+			    startEvent = events.NextEventNumber;
+			    var deserializedEvents = events.Events.Select(e =>
+			    {
+				    var metadata =
+					    e.OriginalEvent.Metadata.ToObject<Dictionary<string, string>>(
+						    typeof(Dictionary<string, string>).AssemblyQualifiedName);
+				    return e.OriginalEvent.Data.ToObject<IEvent>(metadata[EventClrTypeHeader]);
+			    });
+			    BuildAggregate(aggregate, deserializedEvents);
+		    } while (startEvent <= lastEventNumber.Value);
+		    return aggregate;
+	    }
+
+	    public EventData CreateEventData(object @event)
         {
             var eventHeaders = new Dictionary<string, string>()
             {

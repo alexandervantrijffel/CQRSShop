@@ -82,7 +82,7 @@
     <Compile Include="EventSerialization.cs" />
     <Compile Include="EventStoreConnectionWrapper.cs" />
     <Compile Include="Indexer.cs" />
-    <Compile Include="IndexingServie.cs" />
+    <Compile Include="IndexingService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

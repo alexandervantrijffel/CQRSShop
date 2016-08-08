@@ -8,9 +8,9 @@ namespace CQRSShop.Service
         {
             HostFactory.Run(x =>
             {
-                x.Service<IndexingServie>(s =>
+                x.Service<IndexingService>(s =>
                 {
-                    s.ConstructUsing(name => new IndexingServie());
+                    s.ConstructUsing(name => new IndexingService());
                     s.WhenStarted(tc => tc.Start());
                     s.WhenStopped(tc => tc.Stop());
                 });
