@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using CQRSShop.Infrastructure.Exceptions;
 using EventStore.ClientAPI;
-using Newtonsoft.Json;
 
 namespace CQRSShop.Infrastructure
 {
@@ -29,36 +27,27 @@ namespace CQRSShop.Infrastructure
             var expectedVersion = CalculateExpectedVersion(aggregate, events);
             var eventData = events.Select(CreateEventData);
             var streamName = AggregateToStreamName(aggregate.GetType(), aggregate.Id);
-            _connection.AppendToStream(streamName, expectedVersion, eventData);
+            _connection.AppendToStreamAsync(streamName, expectedVersion, eventData).Wait();
             return events;
         }
 
         public override TResult GetById<TResult>(Guid id)
         {
             var streamName = AggregateToStreamName(typeof(TResult), id);
-            var eventsSlice = _connection.ReadStreamEventsForward(streamName, 0, int.MaxValue, false);
+			// todo paging
+            var eventsSlice = _connection.ReadStreamEventsForwardAsync(streamName, 0, 4096, false).Result;
             if (eventsSlice.Status == SliceReadStatus.StreamNotFound)
             {
                 throw new AggregateNotFoundException("Could not found aggregate of type " + typeof(TResult) + " and id " + id);
             }
             var deserializedEvents = eventsSlice.Events.Select(e =>
             {
-                var metadata = DeserializeObject<Dictionary<string, string>>(e.OriginalEvent.Metadata);
-                var eventData = DeserializeObject(e.OriginalEvent.Data, metadata[EventClrTypeHeader]);
-                return eventData as IEvent;
+	            var metadata =
+		            e.OriginalEvent.Metadata.ToObject<Dictionary<string, string>>(
+			            typeof(Dictionary<string, string>).AssemblyQualifiedName);
+	            return e.OriginalEvent.Data.ToObject<IEvent>(metadata[EventClrTypeHeader]);
             });
             return BuildAggregate<TResult>(deserializedEvents);
-        }
-
-        private T DeserializeObject<T>(byte[] data)
-        {
-            return (T)(DeserializeObject(data, typeof(T).AssemblyQualifiedName));
-        }
-
-        private object DeserializeObject(byte[] data, string typeName)
-        {
-            var jsonString = Encoding.UTF8.GetString(data);
-            return JsonConvert.DeserializeObject(jsonString, Type.GetType(typeName));
         }
 
         public EventData CreateEventData(object @event)
@@ -72,17 +61,8 @@ namespace CQRSShop.Infrastructure
                     "Domain", "Enheter"
                 }
             };
-            var eventDataHeaders = SerializeObject(eventHeaders);
-            var data = SerializeObject(@event);
-            var eventData = new EventData(Guid.NewGuid(), @event.GetType().Name, true, data, eventDataHeaders);
+            var eventData = new EventData(Guid.NewGuid(), @event.GetType().Name, true, @event.AsJson(), eventHeaders.AsJson());
             return eventData;
-        }
-
-        private byte[] SerializeObject(object obj)
-        {
-            var jsonObj = JsonConvert.SerializeObject(obj);
-            var data = Encoding.UTF8.GetBytes(jsonObj);
-            return data;
         }
 
         public string EventClrTypeHeader = "EventClrTypeName";

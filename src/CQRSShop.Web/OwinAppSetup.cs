@@ -17,7 +17,6 @@ namespace CQRSShop.Web
 
         public void Configuration(IAppBuilder app)
         {
-
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings()
             {
                 TypeNameHandling = TypeNameHandling.Objects

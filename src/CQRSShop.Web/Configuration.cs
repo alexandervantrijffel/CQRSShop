@@ -21,8 +21,8 @@ namespace CQRSShop.Web
                     .SetDefaultUserCredentials(new UserCredentials("admin", "changeit"));
             var endPoint = new IPEndPoint(EventStoreIP, EventStorePort);
             var connection = EventStoreConnection.Create(settings, endPoint, null);
-            connection.Connect();
-            return connection;
+	        connection.ConnectAsync().Wait();
+	        return connection;
         }
 
         public static IPAddress EventStoreIP

@@ -27,7 +27,12 @@ namespace CQRSShop.Domain.Exceptions
         
     }
 
-    public class UnexpectedPaymentException : DomainException
+	public class NoItemsInBaskedException : DomainException
+	{
+		
+	}
+
+	public class UnexpectedPaymentException : DomainException
     { }
 
     public class OrderCancelledException : DomainException

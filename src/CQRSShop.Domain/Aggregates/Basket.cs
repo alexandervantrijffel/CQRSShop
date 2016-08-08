@@ -57,6 +57,9 @@ namespace CQRSShop.Domain.Aggregates
 
         internal void Checkout(Address shippingAddress)
         {
+			if (_orderLines.IsEmpty)
+				throw new NoItemsInBaskedException();
+
             if(shippingAddress == null || string.IsNullOrWhiteSpace(shippingAddress.Street))
                 throw new MissingAddressException();
             RaiseEvent(new BasketCheckedOut(Id, shippingAddress));

@@ -12,7 +12,7 @@ namespace CQRSShop.Web.Api
         {
             try
             {
-                var connection = Configuration.CreateConnection();
+	            var connection = Configuration.CreateConnection();
                 var domainRepository = new EventStoreDomainRepository(connection);
                 var application = new DomainEntry(domainRepository);
                 application.ExecuteCommand(Input);
