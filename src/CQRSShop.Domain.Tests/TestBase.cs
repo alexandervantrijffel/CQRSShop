@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CQRSShop.Domain;
 using CQRSShop.Infrastructure;
+using CQRSShop.Infrastructure.Repository;
 using NUnit.Framework;
 
 namespace CQRSShop.Tests

@@ -5,7 +5,7 @@ using CQRSShop.Infrastructure.Exceptions;
 using EventStore.ClientAPI.Exceptions;
 using Newtonsoft.Json;
 
-namespace CQRSShop.Infrastructure
+namespace CQRSShop.Infrastructure.Repository
 {
     public class InMemoryDomainRespository : DomainRepositoryBase
     {
@@ -21,7 +21,12 @@ namespace CQRSShop.Infrastructure
             };
         }
 
-        public override IEnumerable<IEvent> Save<TAggregate>(TAggregate aggregate)
+	    public override int? GetLastEventNumber<T>(Guid id)
+	    {
+			return !_latestEvents.Any() ? null : (int?)(_latestEvents.Count() - 1);
+	    }
+
+		public override IEnumerable<IEvent> Save<TAggregate>(TAggregate aggregate)
         {
             var eventsToSave = aggregate.UncommitedEvents().ToList();
             var serializedEvents = eventsToSave.Select(Serialize).ToList();

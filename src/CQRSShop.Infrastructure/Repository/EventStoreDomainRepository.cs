@@ -4,7 +4,7 @@ using System.Linq;
 using CQRSShop.Infrastructure.Exceptions;
 using EventStore.ClientAPI;
 
-namespace CQRSShop.Infrastructure
+namespace CQRSShop.Infrastructure.Repository
 {
     public class EventStoreDomainRepository : DomainRepositoryBase
     {
@@ -21,7 +21,13 @@ namespace CQRSShop.Infrastructure
             return string.Format("{0}-{1}-{2}", Category, type.Name, id);
         }
 
-        public override IEnumerable<IEvent> Save<TAggregate>(TAggregate aggregate)
+		public override int? GetLastEventNumber<T>(Guid id)
+		{
+			var lastEvent = _connection.ReadEventAsync(AggregateToStreamName(typeof(T), id), -1, false).Result;
+			return lastEvent?.Event?.OriginalEventNumber;
+		}
+
+		public override IEnumerable<IEvent> Save<TAggregate>(TAggregate aggregate)
         {
             var events = aggregate.UncommitedEvents().ToList();
             var expectedVersion = CalculateExpectedVersion(aggregate, events);

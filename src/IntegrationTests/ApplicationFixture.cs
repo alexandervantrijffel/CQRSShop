@@ -1,6 +1,7 @@
 using System;
 using CQRSShop.Domain;
 using CQRSShop.Infrastructure;
+using CQRSShop.Infrastructure.Repository;
 using CQRSShop.Web;
 using EventStore.ClientAPI;
 

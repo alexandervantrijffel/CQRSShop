@@ -53,14 +53,14 @@
     <Compile Include="Exceptions\AggregateNotFoundException.cs" />
     <Compile Include="CommandDispatcher.cs" />
     <Compile Include="DomainRepositoryBase.cs" />
-    <Compile Include="EventStoreDomainRepository.cs" />
+    <Compile Include="Repository\EventStoreDomainRepository.cs" />
     <Compile Include="IAggregate.cs" />
     <Compile Include="IdGenerator.cs" />
-    <Compile Include="IDomainRepository.cs" />
+    <Compile Include="Repository\IDomainRepository.cs" />
     <Compile Include="IEvent.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="IHandle.cs" />
-    <Compile Include="InMemoryDomainRespository.cs" />
+    <Compile Include="Repository\InMemoryDomainRespository.cs" />
     <Compile Include="JsonExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

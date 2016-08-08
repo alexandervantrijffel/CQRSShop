@@ -20,12 +20,12 @@ namespace CQRSShop.Web
                     .UseConsoleLogger()
                     .SetDefaultUserCredentials(new UserCredentials("admin", "changeit"));
             var endPoint = new IPEndPoint(EventStoreIP, EventStorePort);
-            var connection = EventStoreConnection.Create(settings, endPoint, null);
+            var connection = EventStoreConnection.Create(settings, endPoint);
 	        connection.ConnectAsync().Wait();
 	        return connection;
         }
 
-        public static IPAddress EventStoreIP
+	    private static IPAddress EventStoreIP
         {
             get
             {
@@ -39,7 +39,7 @@ namespace CQRSShop.Web
             }
         }
 
-        public static int EventStorePort
+	    private static int EventStorePort
         {
             get
             {

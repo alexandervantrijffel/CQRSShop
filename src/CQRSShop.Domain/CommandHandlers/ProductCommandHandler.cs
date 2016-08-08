@@ -3,6 +3,7 @@ using CQRSShop.Domain.Aggregates;
 using CQRSShop.Domain.Exceptions;
 using CQRSShop.Infrastructure;
 using CQRSShop.Infrastructure.Exceptions;
+using CQRSShop.Infrastructure.Repository;
 
 namespace CQRSShop.Domain.CommandHandlers
 {
@@ -18,15 +19,8 @@ namespace CQRSShop.Domain.CommandHandlers
 
         public IAggregate Handle(CreateProduct command)
         {
-            try
-            {
-                var product = _domainRepository.GetById<Product>(command.Id);
+	        if (_domainRepository.GetLastEventNumber<Product>(command.Id) != null)
                 throw new ProductAlreadyExistsException(command.Id);
-            }
-            catch (AggregateNotFoundException)
-            {
-                // We expect not to find anything
-            }
             return Product.Create(command.Id, command.Name, command.Price);
         }
     }

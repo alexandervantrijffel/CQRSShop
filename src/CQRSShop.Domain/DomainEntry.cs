@@ -4,6 +4,7 @@ using System.Linq;
 using CQRSShop.Contracts.Commands;
 using CQRSShop.Domain.CommandHandlers;
 using CQRSShop.Infrastructure;
+using CQRSShop.Infrastructure.Repository;
 
 namespace CQRSShop.Domain
 {

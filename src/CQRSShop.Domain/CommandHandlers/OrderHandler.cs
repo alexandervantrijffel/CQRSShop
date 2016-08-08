@@ -1,6 +1,7 @@
 using CQRSShop.Contracts.Commands;
 using CQRSShop.Domain.Aggregates;
 using CQRSShop.Infrastructure;
+using CQRSShop.Infrastructure.Repository;
 
 namespace CQRSShop.Domain.CommandHandlers
 {
