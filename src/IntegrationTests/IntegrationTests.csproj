@@ -71,6 +71,7 @@
     <Compile Include="BasketTest.cs" />
     <Compile Include="CustomerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReplayTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

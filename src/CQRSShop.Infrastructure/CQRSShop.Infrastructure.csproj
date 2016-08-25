@@ -53,6 +53,7 @@
     <Compile Include="Exceptions\AggregateNotFoundException.cs" />
     <Compile Include="CommandDispatcher.cs" />
     <Compile Include="DomainRepositoryBase.cs" />
+    <Compile Include="Repository\Custom\Replayer.cs" />
     <Compile Include="Repository\EventStoreDomainRepository.cs" />
     <Compile Include="IAggregate.cs" />
     <Compile Include="IdGenerator.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Repository\InMemoryDomainRespository.cs" />
     <Compile Include="JsonExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\Custom\StreamName.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

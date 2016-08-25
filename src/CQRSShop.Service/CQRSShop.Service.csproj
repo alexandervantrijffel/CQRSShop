@@ -76,6 +76,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Custom\Denormalizer.cs" />
     <Compile Include="Documents\Basket.cs" />
     <Compile Include="Documents\Customer.cs" />
     <Compile Include="Documents\Product.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="EventStoreConnectionWrapper.cs" />
     <Compile Include="Indexer.cs" />
     <Compile Include="IndexingService.cs" />
+    <Compile Include="Custom\MyReplayService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

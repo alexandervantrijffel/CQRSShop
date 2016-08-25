@@ -54,6 +54,7 @@ namespace CQRSShop.Service
             _connection = EventStoreConnectionWrapper.Connect();
             _connection.Connected +=
                 (sender, args) => _connection.SubscribeToAllFrom(_latestPosition, false, HandleEvent);
+
             Console.WriteLine("Indexing service started");
         }
 

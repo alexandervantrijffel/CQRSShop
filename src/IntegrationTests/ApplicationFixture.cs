@@ -12,6 +12,8 @@ namespace IntegrationTests
 		private IEventStoreConnection _connection;
 		public DomainEntry Application => _application = _application ?? CreateApplication();
 
+		public IEventStoreConnection Connecton => _connection;
+
 		private DomainEntry CreateApplication()
 		{
 			_connection = Configuration.CreateConnection();
